@@ -1,0 +1,5 @@
+@if (notificationsService.notificationMessage$$()) {
+    <div class="bg-error-600 p-4 text-center">
+        <span>{{ notificationsService.notificationMessage$$() }}</span>
+    </div>
+}
