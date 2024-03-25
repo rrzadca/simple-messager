@@ -17,7 +17,7 @@ export class DevicesService extends StatefulClass<DevicesServiceState> {
         this.createState({ devices: [] });
     }
 
-    addDevice(name: string, type: DeviceType): void {
+    registerDevice(name: string, type: DeviceType): void {
         this.setState({
             devices: [
                 ...this.state.devices,

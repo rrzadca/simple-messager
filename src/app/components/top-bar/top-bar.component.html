@@ -1,0 +1,17 @@
+<div class="flex flex-row items-center justify-end gap-x-4 p-4 md:px-8">
+    @if (currentUsername$$()) {
+        <span>Hi {{ currentUsername$$() }}!</span>
+
+        <sm-button
+            [variant]="'secondary'"
+            class="self-end"
+            (click)="handleLogout()"
+        >
+            Log out
+        </sm-button>
+    }
+
+    <sm-button [variant]="'secondary'" class="self-end" (click)="toggleTheme()">
+        {{ themeButtonLabel$$() }}
+    </sm-button>
+</div>

@@ -1,9 +1,6 @@
+<sm-top-bar></sm-top-bar>
+
 <div class="flex flex-col p-4 md:px-8 md:py-12">
     <sm-notifications-portal></sm-notifications-portal>
-
-    <sm-button [variant]="'secondary'" class="self-end" (click)="toggleTheme()">
-        {{ themeButtonLabel$$() }}
-    </sm-button>
-
     <router-outlet></router-outlet>
 </div>

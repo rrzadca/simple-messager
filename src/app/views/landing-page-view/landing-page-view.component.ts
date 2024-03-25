@@ -18,6 +18,7 @@ import {
 import { CurrentUserService } from '../../services/current-user.service';
 import { DeviceType } from '../../services/devices-service/models/device-type';
 import { InputTextComponent } from '../../components/form/inputs/input-text/input-text.component';
+import { DevicesService } from '../../services/devices-service/devices-service';
 
 interface DeviceItem {
     name: string;
@@ -52,6 +53,7 @@ export class LandingPageViewComponent implements OnInit {
     private readonly router = inject(Router);
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly currentUserService = inject(CurrentUserService);
+    private readonly devicesService = inject(DevicesService);
 
     protected devices$$ = signal<DeviceItem[]>([]);
 
@@ -68,7 +70,7 @@ export class LandingPageViewComponent implements OnInit {
         if (this.form?.valid && this.form.value.username) {
             this.currentUserService.login(this.form.value.username);
 
-            // register device in service
+            this.devicesService.registerDevice(device.name, device.type);
 
             this.router.navigate([device.routerLink], {
                 relativeTo: this.activatedRoute,
