@@ -1,1 +1,25 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind variants;
+
+html {
+    @apply h-full;
+}
+body {
+    @apply flex min-h-full flex-col bg-tertiary-100 text-neutral-800 dark:bg-tertiary-900 dark:text-neutral-200;
+
+    font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+h1 {
+    @apply text-3xl font-bold text-primary-700 dark:text-primary-700;
+}
+
+h3 {
+    @apply text-xl font-bold text-primary-700 dark:text-primary-700;
+}
+
+a {
+    @apply text-primary-700 hover:text-primary-800 dark:text-primary-700 hover:dark:text-primary-500;
+}
