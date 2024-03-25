@@ -8,11 +8,17 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ButtonComponent } from './components/button/button.component';
 import { ThemeService } from './services/theme.service';
+import { NotificationsPortalComponent } from './components/notifications-portal/notifications-portal.component';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [CommonModule, RouterOutlet, ButtonComponent],
+    imports: [
+        CommonModule,
+        RouterOutlet,
+        ButtonComponent,
+        NotificationsPortalComponent,
+    ],
     templateUrl: './app.component.html',
     styles: [
         `
