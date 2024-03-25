@@ -7,13 +7,7 @@ export type ButtonVariant = 'primary' | 'secondary';
     standalone: true,
     imports: [],
     templateUrl: './button.component.html',
-    styles: [
-        `
-            :host {
-                display: block;
-            }
-        `,
-    ],
+    styleUrls: ['./button.component.scss'],
 })
 export class ButtonComponent {
     protected variant$$ = signal<ButtonVariant>('primary');

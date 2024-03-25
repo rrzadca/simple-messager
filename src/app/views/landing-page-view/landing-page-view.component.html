@@ -1,1 +1,17 @@
-<h1 class="mx-auto text-center">Landing page view</h1>
+<h3 class="text-center">Welcome to</h3>
+<h1 class="mt-4 text-center">Communication System Simulator</h1>
+<h3 class="mt-12 text-center">Choose a device type</h3>
+
+<div
+    class="mt-12 flex flex-col justify-center gap-y-4 md:flex-row md:flex-wrap md:gap-x-8"
+>
+    <sm-device-card
+        [label]="'Field device'"
+        [routerLink]="'field-device'"
+    ></sm-device-card>
+
+    <sm-device-card
+        [label]="'Computed device'"
+        [routerLink]="'computed-device'"
+    ></sm-device-card>
+</div>
