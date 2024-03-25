@@ -1,11 +1,28 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en" class="h-full">
     <head>
         <meta charset="utf-8" />
-        <title>SimpleMessager</title>
+        <title>Simple Messager</title>
         <base href="/" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+        <script>
+            // https://tailwindcss.com/docs/dark-mode
+            // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+
+            /// add this to automatically detect dark mode
+            // || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+            if (
+                localStorage.theme === 'dark' ||
+                (!('theme' in localStorage) &&
+                    window.matchMedia('(prefers-color-scheme: dark)').matches)
+            ) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        </script>
     </head>
     <body>
         <app-root></app-root>
