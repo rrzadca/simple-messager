@@ -5,13 +5,10 @@
 <div
     class="mt-12 flex flex-col justify-center gap-y-4 md:flex-row md:flex-wrap md:gap-x-8"
 >
-    <sm-device-card
-        [label]="'Field device'"
-        [routerLink]="'field-device'"
-    ></sm-device-card>
-
-    <sm-device-card
-        [label]="'Computed device'"
-        [routerLink]="'computed-device'"
-    ></sm-device-card>
+    @for (device of devices$$(); track $index) {
+        <sm-device-card
+            [label]="device.label"
+            [routerLink]="device.routerLink"
+        ></sm-device-card>
+    }
 </div>
