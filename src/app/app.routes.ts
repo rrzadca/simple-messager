@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { CommandDeviceGuard } from './guards/command-device.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     {
@@ -15,6 +16,7 @@ export const routes: Routes = [
             },
             {
                 path: 'field-device',
+                canMatch: [AuthGuard],
                 loadChildren: () =>
                     import(
                         './views/field-device-view/field-device-view.routes'
@@ -22,7 +24,7 @@ export const routes: Routes = [
             },
             {
                 path: 'command-device',
-                canMatch: [CommandDeviceGuard],
+                canMatch: [AuthGuard, CommandDeviceGuard],
                 loadChildren: () =>
                     import(
                         './views/command-device-view/command-device-view.routes'

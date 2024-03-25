@@ -18,6 +18,7 @@ import { CommonModule } from '@angular/common';
 })
 export class InputTextComponent extends BaseValueAccessor<string> {
     @Input() label: string | undefined;
+    @Input() placeholder: string = '';
 
     constructor(@Self() public override ngControl: NgControl) {
         super(ngControl);
