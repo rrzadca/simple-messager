@@ -1,0 +1,10 @@
+<div
+    class="divide-y divide-tertiary-300 rounded-md border border-tertiary-400 p-4 shadow-lg dark:divide-tertiary-300 dark:border-gray-200"
+>
+    @if (headerText) {
+        <h3>{{ headerText }}</h3>
+    }
+    <div>
+        <ng-content></ng-content>
+    </div>
+</div>

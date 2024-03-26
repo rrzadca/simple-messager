@@ -1,17 +1,17 @@
 import { CanActivateFn, CanMatchFn, Router, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
-import { NotificationsService } from '../services/notifications.service';
 import { ApiService } from '../api/services/api.service';
 import { DeviceType } from '../api/models/device-type';
 import { CurrentUserService } from '../services/current-user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({ providedIn: 'root' })
 export class CommandDeviceGuard {
     private readonly router = inject(Router);
-    private readonly notificationsService = inject(NotificationsService);
     private readonly apiService = inject(ApiService);
     private readonly currentUserService = inject(CurrentUserService);
+    private readonly toastrService = inject(ToastrService);
 
     canLoginToCommandDevice = ():
         | boolean
@@ -25,8 +25,10 @@ export class CommandDeviceGuard {
                     device.username !== this.currentUserService.state.username,
             )
         ) {
-            this.notificationsService.showNotification(
+            this.toastrService.error(
                 'Command device is already in use',
+                undefined,
+                { timeOut: 4000 },
             );
             this.router.navigateByUrl('/');
         }

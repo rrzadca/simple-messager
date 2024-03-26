@@ -1,5 +1,4 @@
-<div class="flex flex-row gap-x-4">
-    <span class="text-sm text-gray-700 dark:text-gray-200">Keywords:</span>
+<div class="flex flex-row gap-x-4 pt-4">
     @for (keyword of keywords$$(); track $index) {
         <div
             class="rounded-lg bg-info-500 px-2 py-0.5 text-sm dark:bg-info-900"
@@ -16,3 +15,10 @@
     ></sm-input-text>
     <sm-button (click)="handleAddKeyword()"> Add </sm-button>
 </div>
+@if (keywordList$$().length) {
+    <sm-table
+        [data]="keywordList$$()"
+        [tableColumns]="tableColumns"
+        class="mt-4"
+    ></sm-table>
+}

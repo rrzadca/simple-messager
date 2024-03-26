@@ -21,8 +21,6 @@ export class ApiService extends StatefulClass<ApiServiceState> {
             devices: [],
         });
 
-        this.enableDebug();
-
         this.joinFakeUsers();
         this.sendFakeMessages();
     }
