@@ -2,7 +2,7 @@ import { Device, DeviceType, FieldDevice } from '../models/device-type';
 import { Message } from '../models/message.model';
 import { v4 as uuidv4 } from 'uuid';
 import { StatefulClass } from '../../core/stateful-class';
-import { interval, map, Observable, of, Subject } from 'rxjs';
+import { interval, map, Observable, of, Subject, takeWhile } from 'rxjs';
 import { Injectable } from '@angular/core';
 
 interface ApiServiceState {
@@ -23,6 +23,7 @@ export class ApiService extends StatefulClass<ApiServiceState> {
 
         this.enableDebug();
 
+        this.joinFakeUsers();
         this.sendFakeMessages();
     }
 
@@ -82,6 +83,10 @@ export class ApiService extends StatefulClass<ApiServiceState> {
             throw new Error('Device not found');
         }
 
+        if (device.type === DeviceType.FIELD && device.isMuted) {
+            return;
+        }
+
         this.messageSentSubject$.next({
             device: device,
             text: message,
@@ -90,25 +95,15 @@ export class ApiService extends StatefulClass<ApiServiceState> {
         });
     }
 
-    muteDevice(id: string, mute: boolean): Observable<string> {
-        const device: FieldDevice | undefined = this.state.devices.find(
-            (device) => device.id === id && device.type === DeviceType.FIELD,
-        ) as FieldDevice | undefined;
+    muteDevice(id: string, mute: boolean): void {
+        const copyOfDevices = [...this.state.devices];
 
-        if (!device) {
-            throw new Error('Device not found');
-        }
-
+        const device = copyOfDevices.find(
+            (device) => device.id === id,
+        ) as FieldDevice;
         device.isMuted = mute;
 
-        this.setState({
-            devices: [
-                ...this.state.devices.filter((device) => device.id === id),
-                device,
-            ],
-        });
-
-        return of(device.id);
+        this.setState({ devices: copyOfDevices });
     }
 
     getAvailableDevices(): Observable<Device[]> {
@@ -125,21 +120,29 @@ export class ApiService extends StatefulClass<ApiServiceState> {
     private sendFakeMessages(): void {
         let counter = 1;
 
-        interval(10000).subscribe(() => {
-            this.messageSentSubject$.next({
-                device: {
-                    id: `fake-id-${counter}`,
-                    username: `fake-username-${counter}`,
-                    name: `fake-device-${counter}`,
-                    type: DeviceType.FIELD,
-                    joinedAt: new Date(),
-                },
-                text: `fake-message-${counter}`,
-                username: `fake-username-${counter}`,
-                sentAt: new Date(),
-            });
+        interval(6000).subscribe(() => {
+            const randomDevice =
+                this.state.devices[
+                    Math.floor(Math.random() * this.state.devices.length)
+                ];
+
+            this.sendMessage(randomDevice.id, `Fake message ${counter}`);
             counter++;
         });
+    }
+
+    private joinFakeUsers(): void {
+        let counter = 0;
+        interval(4000)
+            .pipe(takeWhile(() => counter < 4))
+            .subscribe(() => {
+                this.registerDevice(
+                    availableUsernames[counter],
+                    availableDevices[counter].type,
+                    (availableDevices[counter] as FieldDevice).name,
+                ).subscribe();
+                counter++;
+            });
     }
 }
 
@@ -168,4 +171,11 @@ const availableDevices: Device[] = [
         id: 'command-device',
         type: DeviceType.COMMAND,
     },
+];
+
+const availableUsernames = [
+    'John Wick',
+    'James Bond',
+    'Indiana Jones',
+    'Bruce Wayne',
 ];

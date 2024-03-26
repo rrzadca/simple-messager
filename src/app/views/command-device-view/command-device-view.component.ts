@@ -127,9 +127,6 @@ export class CommandDeviceViewComponent implements OnInit {
     }
 
     private muteDevice(deviceId: string, mute: boolean): void {
-        this.apiService
-            .muteDevice(deviceId, mute)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe();
+        this.apiService.muteDevice(deviceId, mute);
     }
 }

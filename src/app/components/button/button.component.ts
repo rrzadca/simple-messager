@@ -48,7 +48,7 @@ export class ButtonComponent {
                     'bg-tertiary-700 text-tertiary-100 hover:bg-tertiary-600 focus-visible:outline-secondary-800',
                 );
                 cssClasses.push(
-                    'dark:bg-tertiary-700 dark:text-primary-100 dark:hover:bg-tertiary-800 dark:focus-visible:outline-secondary-200',
+                    'dark:bg-tertiary-900 dark:text-primary-100 dark:hover:bg-tertiary-800 dark:focus-visible:outline-secondary-200',
                 );
                 break;
             default:
