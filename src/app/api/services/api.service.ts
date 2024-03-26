@@ -3,11 +3,13 @@ import { Message } from '../models/message.model';
 import { v4 as uuidv4 } from 'uuid';
 import { StatefulClass } from '../../core/stateful-class';
 import { Observable, of, Subject } from 'rxjs';
+import { Injectable } from '@angular/core';
 
 interface ApiServiceState {
     devices: Device[];
 }
 
+@Injectable({ providedIn: 'root' })
 export class ApiService extends StatefulClass<ApiServiceState> {
     private deviceRegisteredSubject$ = new Subject<Device>();
     private deviceUnregisteredSubject$ = new Subject<string>();
@@ -19,6 +21,8 @@ export class ApiService extends StatefulClass<ApiServiceState> {
         this.createState({
             devices: [],
         });
+
+        this.enableDebug();
     }
 
     get deviceRegistered$(): Observable<Device> {
@@ -57,6 +61,7 @@ export class ApiService extends StatefulClass<ApiServiceState> {
     }
 
     unregisterDevice(deviceId: string): Observable<string> {
+        console.log(` ;; unregister.deviceId`, deviceId);
         if (!this.state.devices.some((device) => device.id === deviceId)) {
             throw new Error('Device not found');
         }
@@ -64,7 +69,7 @@ export class ApiService extends StatefulClass<ApiServiceState> {
         this.setState({
             devices: [
                 ...this.state.devices.filter(
-                    (device) => device.id === deviceId,
+                    (device) => device.id !== deviceId,
                 ),
             ],
         });

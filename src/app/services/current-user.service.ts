@@ -2,6 +2,7 @@ import { StatefulClass } from '../core/stateful-class';
 import { inject, Injectable } from '@angular/core';
 import { ApiService } from '../api/services/api.service';
 import { DeviceType } from '../api/models/device-type';
+import { Router } from '@angular/router';
 
 export interface CurrentUserServiceState {
     username: string | null;
@@ -14,6 +15,7 @@ export interface CurrentUserServiceState {
 })
 export class CurrentUserService extends StatefulClass<CurrentUserServiceState> {
     private readonly apiService = inject(ApiService);
+    private readonly router = inject(Router);
 
     constructor() {
         super();
@@ -47,5 +49,7 @@ export class CurrentUserService extends StatefulClass<CurrentUserServiceState> {
             joinedAt: null,
             deviceId: null,
         });
+
+        this.router.navigateByUrl('/');
     }
 }
