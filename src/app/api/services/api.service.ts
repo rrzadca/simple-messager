@@ -2,7 +2,7 @@ import { Device, DeviceType, FieldDevice } from '../models/device-type';
 import { Message } from '../models/message.model';
 import { v4 as uuidv4 } from 'uuid';
 import { StatefulClass } from '../../core/stateful-class';
-import { Observable, of, Subject } from 'rxjs';
+import { interval, Observable, of, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 
 interface ApiServiceState {
@@ -23,6 +23,8 @@ export class ApiService extends StatefulClass<ApiServiceState> {
         });
 
         this.enableDebug();
+
+        this.sendFakeMessages();
     }
 
     get deviceRegistered$(): Observable<Device> {
@@ -61,7 +63,6 @@ export class ApiService extends StatefulClass<ApiServiceState> {
     }
 
     unregisterDevice(deviceId: string): Observable<string> {
-        console.log(` ;; unregister.deviceId`, deviceId);
         if (!this.state.devices.some((device) => device.id === deviceId)) {
             throw new Error('Device not found');
         }
@@ -115,5 +116,25 @@ export class ApiService extends StatefulClass<ApiServiceState> {
         });
 
         return of(device.id);
+    }
+
+    private sendFakeMessages(): void {
+        let counter = 1;
+
+        interval(10000).subscribe(() => {
+            this.messageSentSubject$.next({
+                device: {
+                    id: `fake-id-${counter}`,
+                    username: `fake-username-${counter}`,
+                    name: `fake-device-${counter}`,
+                    type: DeviceType.FIELD,
+                    joinedAt: new Date(),
+                },
+                text: `fake-message-${counter}`,
+                username: `fake-username-${counter}`,
+                sentAt: new Date(),
+            });
+            counter++;
+        });
     }
 }

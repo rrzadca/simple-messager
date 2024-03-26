@@ -13,7 +13,7 @@ export interface DeviceBase {
 export interface FieldDevice extends DeviceBase {
     type: DeviceType.FIELD;
     name: string;
-    isMuted: boolean;
+    isMuted?: boolean;
 }
 
 export interface CommandDevice extends DeviceBase {

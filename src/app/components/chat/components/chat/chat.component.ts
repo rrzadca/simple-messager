@@ -80,10 +80,13 @@ export class ChatComponent implements OnInit {
             this.form?.value.message &&
             this.currentUserService.state.deviceId
         ) {
+            console.log(` ;; send`);
             this.apiService.sendMessage(
                 this.currentUserService.state.deviceId,
                 this.form.value.message,
             );
+
+            this.form.reset();
         }
     }
 

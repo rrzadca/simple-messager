@@ -1,5 +1,5 @@
 <div
-    class="flex flex-col gap-y-4 divide-y divide-yellow-100 rounded-md border border-gray-200 p-4"
+    class="flex flex-col gap-y-4 divide-y divide-secondary-600 rounded-md border border-tertiary-400 p-4 dark:divide-yellow-100 dark:border-gray-200"
 >
     @for (message of messages$$(); track $index) {
         <sm-chat-message
@@ -11,10 +11,19 @@
     @if (form) {
         <form
             [formGroup]="form"
-            class="flex flex-row items-center justify-between pt-2"
+            class="flex flex-col items-center justify-between pt-2 md:flex-row md:gap-x-4"
         >
-            <sm-input-text [formControlName]="'message'"></sm-input-text>
-            <sm-button (click)="handleSubmit()">Send</sm-button>
+            <sm-input-text
+                class="w-full"
+                [formControlName]="'message'"
+            ></sm-input-text>
+            <sm-button
+                [variant]="'secondary'"
+                class="mt-2"
+                (click)="handleSubmit()"
+            >
+                Send
+            </sm-button>
         </form>
     }
 </div>

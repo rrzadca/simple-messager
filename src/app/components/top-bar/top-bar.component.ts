@@ -17,7 +17,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     standalone: true,
     imports: [ButtonComponent],
     templateUrl: './top-bar.component.html',
-    styleUrl: './top-bar.component.scss',
+    styles: [
+        `
+            :host {
+                display: block;
+            }
+        `,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TopBarComponent implements OnInit {
