@@ -1,9 +1,13 @@
 <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
     <sm-chat [adminMode]="true"></sm-chat>
-    <sm-table
-        [data]="devices$$()"
-        [tableColumns]="tableColumns"
-        [rowOptions]="tableRowOptions"
-        class="lg:col-span-2"
-    ></sm-table>
+    <div class="lg:col-span-2">
+        <sm-keywords-guard></sm-keywords-guard>
+
+        <sm-table
+            [data]="devices$$()"
+            [tableColumns]="tableColumns"
+            [rowOptions]="tableRowOptions"
+            class="mt-4"
+        ></sm-table>
+    </div>
 </div>

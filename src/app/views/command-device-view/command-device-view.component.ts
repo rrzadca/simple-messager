@@ -15,6 +15,10 @@ import { Device, DeviceType } from '../../api/models/device-type';
 import { TableColumn } from '../../components/table/models/table-column.model';
 import { TableRowOption } from '../../components/table/models/table-row-option.model';
 import { DeviceTypePipe } from '../../pipes/device-type/device-type.pipe';
+import { InputTextComponent } from '../../components/form/inputs/input-text/input-text.component';
+import { FormsModule } from '@angular/forms';
+import { ButtonComponent } from '../../components/button/button.component';
+import { KeywordsGuardComponent } from './components/keywords-guard/keywords-guard.component';
 
 interface DeviceRowItem {
     id: string;
@@ -28,7 +32,15 @@ interface DeviceRowItem {
 @Component({
     selector: 'sm-command-device-view',
     standalone: true,
-    imports: [CommonModule, ChatComponent, TableComponent],
+    imports: [
+        CommonModule,
+        ChatComponent,
+        TableComponent,
+        InputTextComponent,
+        FormsModule,
+        ButtonComponent,
+        KeywordsGuardComponent,
+    ],
     providers: [DatePipe, DeviceTypePipe],
     templateUrl: './command-device-view.component.html',
     styles: [
@@ -50,6 +62,7 @@ export class CommandDeviceViewComponent implements OnInit {
 
     protected tableColumns: TableColumn[] = [];
     protected tableRowOptions: TableRowOption[] = [];
+    protected keyword: string | null = null;
 
     ngOnInit() {
         this.initTableColumns();
@@ -129,4 +142,6 @@ export class CommandDeviceViewComponent implements OnInit {
     private muteDevice(deviceId: string, mute: boolean): void {
         this.apiService.muteDevice(deviceId, mute);
     }
+
+    handleAddKeyword() {}
 }
