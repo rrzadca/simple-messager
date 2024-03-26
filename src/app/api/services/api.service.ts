@@ -72,7 +72,7 @@ export class ApiService extends StatefulClass<ApiServiceState> {
         return of(deviceId);
     }
 
-    sendMessage(deviceId: string, message: string): void {
+    sendMessage(deviceId: string, message: string): Observable<void> {
         const device = this.state.devices.find(
             (device) => device.id === deviceId,
         );
@@ -82,7 +82,7 @@ export class ApiService extends StatefulClass<ApiServiceState> {
         }
 
         if (device.type === DeviceType.FIELD && device.isMuted) {
-            return;
+            return of(void 0);
         }
 
         this.messageSentSubject$.next({
@@ -91,9 +91,11 @@ export class ApiService extends StatefulClass<ApiServiceState> {
             username: device.username ?? '',
             sentAt: new Date(),
         });
+
+        return of(void 0);
     }
 
-    muteDevice(id: string, mute: boolean): void {
+    muteDevice(id: string, mute: boolean): Observable<string> {
         const copyOfDevices = [...this.state.devices];
 
         const device = copyOfDevices.find(
@@ -102,6 +104,8 @@ export class ApiService extends StatefulClass<ApiServiceState> {
         device.isMuted = mute;
 
         this.setState({ devices: copyOfDevices });
+
+        return of(id);
     }
 
     getAvailableDevices(): Observable<Device[]> {
@@ -124,7 +128,10 @@ export class ApiService extends StatefulClass<ApiServiceState> {
                     Math.floor(Math.random() * this.state.devices.length)
                 ];
 
-            this.sendMessage(randomDevice.id, `Fake message ${counter}`);
+            this.sendMessage(
+                randomDevice.id,
+                `Fake message ${counter}`,
+            ).subscribe();
             counter++;
         });
     }

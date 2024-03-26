@@ -20,6 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../components/button/button.component';
 import { KeywordsGuardComponent } from './components/keywords-guard/keywords-guard.component';
 import { CardComponent } from '../../card/card.component';
+import { ToastrService } from 'ngx-toastr';
 
 interface DeviceRowItem {
     id: string;
@@ -59,12 +60,12 @@ export class CommandDeviceViewComponent implements OnInit {
     private readonly apiService = inject(ApiService);
     private readonly deviceTypePipe = inject(DeviceTypePipe);
     private readonly datePipe = inject(DatePipe);
+    private readonly toastrService = inject(ToastrService);
 
     protected devices$$ = signal<DeviceRowItem[]>([]);
 
     protected tableColumns: TableColumn[] = [];
     protected tableRowOptions: TableRowOption[] = [];
-    protected keyword: string | null = null;
 
     ngOnInit() {
         this.initTableColumns();
@@ -106,7 +107,7 @@ export class CommandDeviceViewComponent implements OnInit {
                     this.muteDevice(device.id, true);
                 },
                 isVisible: (device) => {
-                    return !device.isMuted;
+                    return !device.isMuted && device.type === 'Field Device';
                 },
             },
             {
@@ -115,7 +116,7 @@ export class CommandDeviceViewComponent implements OnInit {
                     this.muteDevice(device.id, false);
                 },
                 isVisible: (device) => {
-                    return device.isMuted;
+                    return device.isMuted && device.type === 'Field Device';
                 },
             },
         ];
@@ -142,8 +143,15 @@ export class CommandDeviceViewComponent implements OnInit {
     }
 
     private muteDevice(deviceId: string, mute: boolean): void {
-        this.apiService.muteDevice(deviceId, mute);
+        this.apiService
+            .muteDevice(deviceId, mute)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.toastrService.info(
+                    `Device has been ${mute ? 'muted' : 'unmuted'}`,
+                    undefined,
+                    { timeOut: 4000, enableHtml: true },
+                );
+            });
     }
-
-    handleAddKeyword() {}
 }
