@@ -19,8 +19,8 @@ import { InputTextComponent } from '../../components/form/inputs/input-text/inpu
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../components/button/button.component';
 import { KeywordsGuardComponent } from './components/keywords-guard/keywords-guard.component';
-import { CardComponent } from '../../card/card.component';
 import { ToastrService } from 'ngx-toastr';
+import { CardComponent } from '../../components/card/card.component';
 
 interface DeviceRowItem {
     id: string;

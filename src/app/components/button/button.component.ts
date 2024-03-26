@@ -1,4 +1,10 @@
-import { Component, computed, Input, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    Input,
+    signal,
+} from '@angular/core';
 
 export type ButtonVariant = 'primary' | 'secondary';
 
@@ -14,6 +20,7 @@ export type ButtonVariant = 'primary' | 'secondary';
             }
         `,
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
     protected variant$$ = signal<ButtonVariant>('primary');

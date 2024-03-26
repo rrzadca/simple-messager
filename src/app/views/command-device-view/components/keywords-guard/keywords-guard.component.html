@@ -1,10 +1,6 @@
 <div class="flex flex-row gap-x-4 pt-4">
     @for (keyword of keywords$$(); track $index) {
-        <div
-            class="rounded-lg bg-info-500 px-2 py-0.5 text-sm dark:bg-info-900"
-        >
-            {{ keyword }}
-        </div>
+        <sm-badge [text]="keyword" [variant]="'error'"></sm-badge>
     }
 </div>
 <div class="flex flex-row items-end gap-x-4">

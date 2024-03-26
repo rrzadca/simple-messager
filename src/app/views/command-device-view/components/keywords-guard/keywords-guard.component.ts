@@ -1,4 +1,11 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    inject,
+    OnInit,
+    signal,
+} from '@angular/core';
 import { ButtonComponent } from '../../../../components/button/button.component';
 import { InputTextComponent } from '../../../../components/form/inputs/input-text/input-text.component';
 import { FormsModule } from '@angular/forms';
@@ -8,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 import { DatePipe } from '@angular/common';
 import { TableComponent } from '../../../../components/table/components/table/table.component';
 import { TableColumn } from '../../../../components/table/models/table-column.model';
+import { BadgeComponent } from '../../../../components/badge/badge.component';
 
 interface KeywordRowItem {
     keywords: string;
@@ -19,7 +27,13 @@ interface KeywordRowItem {
 @Component({
     selector: 'sm-keywords-guard',
     standalone: true,
-    imports: [ButtonComponent, InputTextComponent, FormsModule, TableComponent],
+    imports: [
+        ButtonComponent,
+        InputTextComponent,
+        FormsModule,
+        TableComponent,
+        BadgeComponent,
+    ],
     providers: [DatePipe],
     templateUrl: './keywords-guard.component.html',
     styles: [
@@ -29,6 +43,7 @@ interface KeywordRowItem {
             }
         `,
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KeywordsGuardComponent implements OnInit {
     private readonly apiService = inject(ApiService);

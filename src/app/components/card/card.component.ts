@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
     selector: 'sm-card',
@@ -12,6 +12,7 @@ import { Component, Input } from '@angular/core';
             }
         `,
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent {
     @Input() headerText: string | null = null;
