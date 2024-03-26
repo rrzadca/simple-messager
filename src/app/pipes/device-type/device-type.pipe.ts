@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { DeviceType } from '../../api/models/device-type';
 
 @Pipe({
-    name: 'smDeviceType',
+    name: 'deviceType',
     standalone: true,
 })
 export class DeviceTypePipe implements PipeTransform {

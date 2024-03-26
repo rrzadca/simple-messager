@@ -4,6 +4,7 @@ import { InputTextComponent } from '../../../../components/form/inputs/input-tex
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../../../api/services/api.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'sm-keywords-guard',
@@ -21,6 +22,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class KeywordsGuardComponent implements OnInit {
     private readonly apiService = inject(ApiService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly toastrService = inject(ToastrService);
 
     protected keywords$$ = signal<string[]>([]);
     protected keyword: string | null = null;
@@ -40,7 +42,13 @@ export class KeywordsGuardComponent implements OnInit {
                     [],
                 );
 
-                alert('Detected keywords: ' + detectedKeywords.join(', '));
+                if (detectedKeywords.length) {
+                    this.toastrService.warning(
+                        `Forbidden message has been sent`,
+                        undefined,
+                        { timeOut: 4000, enableHtml: true },
+                    );
+                }
             });
     }
 
