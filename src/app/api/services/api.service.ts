@@ -87,7 +87,7 @@ export class ApiService extends StatefulClass<ApiServiceState> {
         }
 
         this.messageSentSubject$.next({
-            deviceId: device.id,
+            device: device,
             text: message,
             username: device.username,
             sentAt: new Date(),

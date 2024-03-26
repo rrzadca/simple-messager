@@ -1,6 +1,8 @@
+import { Device } from './device-type';
+
 export interface Message {
     text: string;
-    deviceId: string;
     username: string;
+    device: Device;
     sentAt: Date;
 }

@@ -16,7 +16,7 @@ export const routes: Routes = [
             },
             {
                 path: 'field-device',
-                canMatch: [AuthGuard],
+                // canMatch: [AuthGuard],
                 loadChildren: () =>
                     import(
                         './views/field-device-view/field-device-view.routes'
@@ -24,7 +24,7 @@ export const routes: Routes = [
             },
             {
                 path: 'command-device',
-                canMatch: [AuthGuard, CommandDeviceGuard],
+                // canMatch: [AuthGuard, CommandDeviceGuard],
                 loadChildren: () =>
                     import(
                         './views/command-device-view/command-device-view.routes'

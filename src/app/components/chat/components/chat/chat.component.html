@@ -1,0 +1,20 @@
+<div
+    class="flex flex-col gap-y-4 divide-y divide-yellow-100 rounded-md border border-gray-200 p-4"
+>
+    @for (message of messages$$(); track $index) {
+        <sm-chat-message
+            [message]="message"
+            [adminMode]="adminMode$$()"
+        ></sm-chat-message>
+    }
+
+    @if (form) {
+        <form
+            [formGroup]="form"
+            class="flex flex-row items-center justify-between pt-2"
+        >
+            <sm-input-text [formControlName]="'message'"></sm-input-text>
+            <sm-button (click)="handleSubmit()">Send</sm-button>
+        </form>
+    }
+</div>
