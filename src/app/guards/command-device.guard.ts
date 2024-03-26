@@ -1,27 +1,26 @@
 import { CanActivateFn, CanMatchFn, Router, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
-import { DevicesService } from '../services/devices-service/devices-service';
 import { NotificationsService } from '../services/notifications.service';
+import { ApiService } from '../api/services/api.service';
+import { DeviceType } from '../api/models/device-type';
 
 @Injectable({ providedIn: 'root' })
 export class CommandDeviceGuard {
     private readonly router = inject(Router);
     private readonly notificationsService = inject(NotificationsService);
-    private readonly devicesService = inject(DevicesService);
+    private readonly apiService = inject(ApiService);
 
     canLoginToCommandDevice = ():
         | boolean
         | UrlTree
         | Observable<boolean | UrlTree>
         | Promise<boolean | UrlTree> => {
-        console.log(` ;; this.devicesService.state`, this.devicesService.state);
         if (
-            !this.devicesService.state.devices.some(
-                (device) => device.type === 'COMMAND',
+            this.apiService.state.devices.some(
+                (device) => device.type === DeviceType.COMMAND,
             )
         ) {
-            console.log(` ;; show`);
             this.notificationsService.showNotification(
                 'Command device is already in use',
             );
