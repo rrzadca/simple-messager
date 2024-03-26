@@ -1,0 +1,21 @@
+<table class="min-w-full divide-y divide-tertiary-300">
+    <thead>
+        <tr>
+            @for (tableColumn of tableColumns; track $index) {
+                <th
+                    scope="col"
+                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold"
+                >
+                    {{ tableColumn.label }}
+                </th>
+            }
+        </tr>
+    </thead>
+    @for (item of data; track $index) {
+        <sm-table-row
+            [data]="item"
+            [tableColumns]="tableColumns"
+            [rowOptions]="rowOptions"
+        ></sm-table-row>
+    }
+</table>
