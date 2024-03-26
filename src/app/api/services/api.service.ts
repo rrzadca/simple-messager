@@ -11,8 +11,7 @@ interface ApiServiceState {
 
 @Injectable({ providedIn: 'root' })
 export class ApiService extends StatefulClass<ApiServiceState> {
-    private deviceRegisteredSubject$ = new Subject<Device>();
-    private deviceUnregisteredSubject$ = new Subject<string>();
+    private readonly devicesChangedSubject$ = new Subject<void>();
     private messageSentSubject$ = new Subject<Message>();
 
     constructor() {
@@ -27,12 +26,8 @@ export class ApiService extends StatefulClass<ApiServiceState> {
         this.sendFakeMessages();
     }
 
-    get deviceRegistered$(): Observable<Device> {
-        return this.deviceRegisteredSubject$.asObservable();
-    }
-
-    get deviceUnregistered$(): Observable<string> {
-        return this.deviceUnregisteredSubject$.asObservable();
+    get devicesChanged$(): Observable<void> {
+        return this.devicesChangedSubject$.asObservable();
     }
 
     get messageSent$(): Observable<Message> {
@@ -57,7 +52,7 @@ export class ApiService extends StatefulClass<ApiServiceState> {
             devices: [...this.state.devices, newDevice],
         });
 
-        this.deviceRegisteredSubject$.next(newDevice);
+        this.devicesChangedSubject$.next();
 
         return of(newDevice.id);
     }
@@ -78,7 +73,7 @@ export class ApiService extends StatefulClass<ApiServiceState> {
         return of(deviceId);
     }
 
-    sendMessage(deviceId: string, message: string): Observable<void> {
+    sendMessage(deviceId: string, message: string): void {
         const device = this.state.devices.find(
             (device) => device.id === deviceId,
         );
@@ -93,8 +88,6 @@ export class ApiService extends StatefulClass<ApiServiceState> {
             username: device.username ?? '',
             sentAt: new Date(),
         });
-
-        return of();
     }
 
     muteDevice(id: string, mute: boolean): Observable<string> {

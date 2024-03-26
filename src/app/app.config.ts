@@ -4,6 +4,7 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { CHAT_MESSAGE_MAPPER_SERVICE } from './components/chat/services/chat-message-mapper.service';
 import { ApiChatMessageMapperService } from './components/chat/services/api-chat-message-mapper.service';
+import { DeviceTypePipe } from './pipes/device-type/device-type.pipe';
 
 export const appConfig: ApplicationConfig = {
     providers: [

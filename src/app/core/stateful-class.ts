@@ -9,6 +9,8 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export abstract class StatefulClass<State> {
+    private readonly destroyRef = inject(DestroyRef);
+
     private stateInitialized = false;
     private isDebugEnabled = false;
 
@@ -22,6 +24,17 @@ export abstract class StatefulClass<State> {
         return (this.stateSubject$ as any)
             .asObservable()
             .pipe(filter((state) => state !== null));
+    }
+
+    observeStateChange<Key extends keyof State>(
+        stateProperty: Key,
+    ): Observable<State[Key]> {
+        return this.state$.pipe(
+            filter((state): state is State => !!state),
+            map((state) => state[stateProperty]),
+            distinctUntilChanged(),
+            takeUntilDestroyed(this.destroyRef),
+        );
     }
 
     protected enableDebug(): void {

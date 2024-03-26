@@ -1,11 +1,35 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    inject,
+    OnInit,
+    signal,
+} from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ChatComponent } from '../../components/chat/components/chat/chat.component';
+import { TableComponent } from '../../components/table/components/table/table.component';
+import { ApiService } from '../../api/services/api.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Device, DeviceType } from '../../api/models/device-type';
+import { TableColumn } from '../../components/table/models/table-column.model';
+import { TableRowOption } from '../../components/table/models/table-row-option.model';
+import { DeviceTypePipe } from '../../pipes/device-type/device-type.pipe';
+
+interface DeviceRowItem {
+    id: string;
+    username: string;
+    name: string;
+    type: string;
+    joinedAt: string;
+    isMuted: boolean;
+}
 
 @Component({
     selector: 'sm-command-device-view',
     standalone: true,
-    imports: [CommonModule, ChatComponent],
+    imports: [CommonModule, ChatComponent, TableComponent],
+    providers: [DatePipe, DeviceTypePipe],
     templateUrl: './command-device-view.component.html',
     styles: [
         `
@@ -16,4 +40,96 @@ import { ChatComponent } from '../../components/chat/components/chat/chat.compon
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommandDeviceViewComponent {}
+export class CommandDeviceViewComponent implements OnInit {
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly apiService = inject(ApiService);
+    private readonly deviceTypePipe = inject(DeviceTypePipe);
+    private readonly datePipe = inject(DatePipe);
+
+    protected devices$$ = signal<DeviceRowItem[]>([]);
+
+    protected tableColumns: TableColumn[] = [];
+    protected tableRowOptions: TableRowOption[] = [];
+
+    ngOnInit() {
+        this.initTableColumns();
+        this.initTableRowOptions();
+
+        this.devices$$.set(
+            this.apiService.state.devices.map((device) =>
+                this.mapToDeviceRowItem(device),
+            ),
+        );
+        this.listenForDevicesChange();
+    }
+
+    private listenForDevicesChange(): void {
+        this.apiService
+            .observeStateChange('devices')
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((devices) => {
+                this.devices$$.set(
+                    devices.map((device) => this.mapToDeviceRowItem(device)),
+                );
+            });
+    }
+
+    private initTableColumns(): void {
+        this.tableColumns = [
+            { fieldName: 'username', label: 'Username' },
+            { fieldName: 'name', label: 'Name' },
+            { fieldName: 'type', label: 'Type' },
+            { fieldName: 'joinedAt', label: 'Joined At' },
+        ];
+    }
+
+    private initTableRowOptions(): void {
+        this.tableRowOptions = [
+            {
+                label: 'Mute',
+                action: (device: DeviceRowItem) => {
+                    this.muteDevice(device.id, true);
+                },
+                isVisible: (device) => {
+                    return !device.isMuted;
+                },
+            },
+            {
+                label: 'Unmute',
+                action: (device: DeviceRowItem) => {
+                    this.muteDevice(device.id, false);
+                },
+                isVisible: (device) => {
+                    return device.isMuted;
+                },
+            },
+        ];
+    }
+
+    private mapToDeviceRowItem(device: Device): DeviceRowItem {
+        return {
+            id: device.id,
+            username: device.username ?? '',
+            name:
+                device.type === DeviceType.FIELD
+                    ? device.name
+                    : 'Command Device',
+            type: this.deviceTypePipe.transform(device.type) ?? '',
+            joinedAt:
+                this.datePipe.transform(
+                    device.joinedAt,
+                    'dd.MM.yyyy HH:mm',
+                    'UTC',
+                ) ?? '',
+            isMuted:
+                device.type === DeviceType.FIELD ? !!device.isMuted : false,
+        };
+    }
+
+    private muteDevice(deviceId: string, mute: boolean): void {
+        this.apiService
+            .muteDevice(deviceId, mute)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
+    }
+}
