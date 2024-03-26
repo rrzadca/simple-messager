@@ -1,6 +1,13 @@
 <div class="flex flex-row items-center justify-between pt-2">
     <div class="flex flex-col items-start md:flex-row md:items-center">
-        <span class="text-sm">{{ message?.username }}</span>
+        <span
+            class="text-sm"
+            [ngClass]="{
+                'rounded-md bg-error-600 px-2 text-primary-50':
+                    message?.isFromCommandDevice
+            }"
+            >{{ message?.username }}</span
+        >
         @if (adminMode) {
             <span class="mt-1 text-xs md:ml-2 md:mt-0"
                 >({{ message?.deviceName }})</span

@@ -13,6 +13,7 @@ export class ApiChatMessageMapperService extends ChatMessageMapperService {
                 message.device.type === DeviceType.FIELD
                     ? message.device.name
                     : 'Command device',
+            isFromCommandDevice: message.device.type === DeviceType.COMMAND,
             sendAt: message.sentAt,
         };
     }

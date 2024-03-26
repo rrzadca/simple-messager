@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ChatMessage } from '../../models/chat-message.model';
 
 @Component({
     selector: 'sm-chat-message',
     standalone: true,
-    imports: [DatePipe],
+    imports: [CommonModule, DatePipe],
     templateUrl: './chat-message.component.html',
     styles: [
         `
