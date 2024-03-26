@@ -2,7 +2,7 @@ import { Device, DeviceType, FieldDevice } from '../models/device-type';
 import { Message } from '../models/message.model';
 import { v4 as uuidv4 } from 'uuid';
 import { StatefulClass } from '../../core/stateful-class';
-import { Observable, Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 
 interface ApiServiceState {
     devices: Device[];
@@ -33,13 +33,18 @@ export class ApiService extends StatefulClass<ApiServiceState> {
         return this.messageSentSubject$.asObservable();
     }
 
-    registerDevice(username: string, type: DeviceType): string {
+    registerDevice(
+        username: string,
+        type: DeviceType,
+        deviceName: string,
+    ): Observable<string> {
         const newDevice: Device = {
             id: uuidv4(),
             type,
             joinedAt: new Date(),
             username: username,
             isMuted: false,
+            name: deviceName,
         };
 
         this.setState({
@@ -48,10 +53,10 @@ export class ApiService extends StatefulClass<ApiServiceState> {
 
         this.deviceRegisteredSubject$.next(newDevice);
 
-        return newDevice.id;
+        return of(newDevice.id);
     }
 
-    unregisterDevice(deviceId: string): void {
+    unregisterDevice(deviceId: string): Observable<string> {
         if (!this.state.devices.some((device) => device.id === deviceId)) {
             throw new Error('Device not found');
         }
@@ -63,9 +68,11 @@ export class ApiService extends StatefulClass<ApiServiceState> {
                 ),
             ],
         });
+
+        return of(deviceId);
     }
 
-    sendMessage(deviceId: string, message: string) {
+    sendMessage(deviceId: string, message: string): Observable<void> {
         const device = this.state.devices.find(
             (device) => device.id === deviceId,
         );
@@ -80,9 +87,11 @@ export class ApiService extends StatefulClass<ApiServiceState> {
             username: device.username,
             sentAt: new Date(),
         });
+
+        return of();
     }
 
-    muteDevice(id: string, mute: boolean): string {
+    muteDevice(id: string, mute: boolean): Observable<string> {
         const device: FieldDevice | undefined = this.state.devices.find(
             (device) => device.id === id && device.type === DeviceType.FIELD,
         ) as FieldDevice | undefined;
@@ -100,6 +109,6 @@ export class ApiService extends StatefulClass<ApiServiceState> {
             ],
         });
 
-        return device.id;
+        return of(device.id);
     }
 }

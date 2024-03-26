@@ -1,19 +1,19 @@
 import { StatefulClass } from '../core/stateful-class';
 import { inject, Injectable } from '@angular/core';
-import { DevicesService } from './devices-service/devices-service';
-import { Device, DeviceType } from './devices-service/models/device-type';
+import { ApiService } from '../api/services/api.service';
+import { DeviceType } from '../api/models/device-type';
 
 export interface CurrentUserServiceState {
     username: string | null;
     joinedAt: Date | null;
-    device: Device | null;
+    deviceId: string | null;
 }
 
 @Injectable({
     providedIn: 'root',
 })
 export class CurrentUserService extends StatefulClass<CurrentUserServiceState> {
-    private readonly devicesService = inject(DevicesService);
+    private readonly apiService = inject(ApiService);
 
     constructor() {
         super();
@@ -21,23 +21,31 @@ export class CurrentUserService extends StatefulClass<CurrentUserServiceState> {
         this.createState({
             username: null,
             joinedAt: null,
-            device: null,
+            deviceId: null,
         });
     }
 
-    login(username: string, deviceName: string, deviceType: DeviceType): void {
-        this.setState({
-            username,
-            joinedAt: new Date(),
-        });
-
-        this.devicesService.registerDevice(deviceName, deviceType);
+    login(username: string, deviceType: DeviceType, deviceName: string): void {
+        this.apiService
+            .registerDevice(username, deviceType, deviceName)
+            .subscribe((deviceId) => {
+                this.setState({
+                    username,
+                    joinedAt: new Date(),
+                    deviceId,
+                });
+            });
     }
 
     logout(): void {
+        if (this.state.deviceId) {
+            this.apiService.unregisterDevice(this.state.deviceId).subscribe();
+        }
+
         this.setState({
             username: null,
             joinedAt: null,
+            deviceId: null,
         });
     }
 }
