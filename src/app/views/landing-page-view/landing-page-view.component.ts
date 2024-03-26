@@ -68,9 +68,11 @@ export class LandingPageViewComponent implements OnInit {
         this.form?.markAllAsTouched();
 
         if (this.form?.valid && this.form.value.username) {
-            this.currentUserService.login(this.form.value.username);
-
-            this.devicesService.registerDevice(device.name, device.type);
+            this.currentUserService.login(
+                this.form.value.username,
+                device.name,
+                device.type,
+            );
 
             this.router.navigate([device.routerLink], {
                 relativeTo: this.activatedRoute,

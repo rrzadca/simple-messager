@@ -1,19 +1,22 @@
-export type DeviceType = 'FIELD' | 'COMMAND';
+export enum DeviceType {
+    FIELD = 'FIELD',
+    COMMAND = 'COMMAND',
+}
 
 export interface DeviceBase {
+    id: string;
     type: DeviceType;
     joinedAt: Date;
-    name: string;
     username: string;
 }
 
 export interface FieldDevice extends DeviceBase {
-    type: 'FIELD';
-    id: string;
+    type: DeviceType.FIELD;
+    isMuted: boolean;
 }
 
 export interface CommandDevice extends DeviceBase {
-    type: 'COMMAND';
+    type: DeviceType.COMMAND;
 }
 
 export type Device = FieldDevice | CommandDevice;

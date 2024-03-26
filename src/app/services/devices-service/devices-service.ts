@@ -17,18 +17,19 @@ export class DevicesService extends StatefulClass<DevicesServiceState> {
         this.createState({ devices: [] });
     }
 
-    registerDevice(name: string, type: DeviceType): void {
+    registerDevice(name: string, type: DeviceType): Device {
+        const newDevice = {
+            name,
+            type,
+            joinedAt: new Date(),
+            id: uuidv4(),
+            username: this.currentUserService.state.username ?? '',
+        };
+
         this.setState({
-            devices: [
-                ...this.state.devices,
-                {
-                    name,
-                    type,
-                    joinedAt: new Date(),
-                    id: uuidv4(),
-                    username: this.currentUserService.state.username ?? '',
-                },
-            ],
+            devices: [...this.state.devices, newDevice],
         });
+
+        return newDevice;
     }
 }

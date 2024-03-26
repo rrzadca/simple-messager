@@ -1,6 +1,6 @@
 export interface Message {
-    test: string;
+    text: string;
     deviceId: string;
     username: string;
-    receivedAt: Date;
+    sentAt: Date;
 }
