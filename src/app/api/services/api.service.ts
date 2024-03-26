@@ -2,7 +2,7 @@ import { Device, DeviceType, FieldDevice } from '../models/device-type';
 import { Message } from '../models/message.model';
 import { v4 as uuidv4 } from 'uuid';
 import { StatefulClass } from '../../core/stateful-class';
-import { interval, Observable, of, Subject } from 'rxjs';
+import { interval, map, Observable, of, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 
 interface ApiServiceState {
@@ -90,7 +90,7 @@ export class ApiService extends StatefulClass<ApiServiceState> {
         this.messageSentSubject$.next({
             device: device,
             text: message,
-            username: device.username,
+            username: device.username ?? '',
             sentAt: new Date(),
         });
 
@@ -118,6 +118,17 @@ export class ApiService extends StatefulClass<ApiServiceState> {
         return of(device.id);
     }
 
+    getAvailableDevices(): Observable<Device[]> {
+        const takenDevicesIds = this.state.devices.map((device) => device.id);
+        return of(availableDevices).pipe(
+            map((devices) =>
+                devices.filter(
+                    (device) => !takenDevicesIds.includes(device.id),
+                ),
+            ),
+        );
+    }
+
     private sendFakeMessages(): void {
         let counter = 1;
 
@@ -138,3 +149,30 @@ export class ApiService extends StatefulClass<ApiServiceState> {
         });
     }
 }
+
+const availableDevices: Device[] = [
+    {
+        id: 'iphone-1',
+        type: DeviceType.FIELD,
+        name: 'iPhone 1',
+    },
+    {
+        id: 'iphone-2',
+        type: DeviceType.FIELD,
+        name: 'iPhone 2',
+    },
+    {
+        id: 'ipad-1',
+        type: DeviceType.FIELD,
+        name: 'iPad 1',
+    },
+    {
+        id: 'ipad-2',
+        type: DeviceType.FIELD,
+        name: 'iPad 2',
+    },
+    {
+        id: 'command-device',
+        type: DeviceType.COMMAND,
+    },
+];

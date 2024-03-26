@@ -17,6 +17,8 @@ import {
 import { CurrentUserService } from '../../services/current-user.service';
 import { InputTextComponent } from '../../components/form/inputs/input-text/input-text.component';
 import { DeviceType } from '../../api/models/device-type';
+import { ApiService } from '../../api/services/api.service';
+import { map } from 'rxjs';
 
 interface DeviceItem {
     name: string;
@@ -51,6 +53,7 @@ export class LandingPageViewComponent implements OnInit {
     private readonly router = inject(Router);
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly currentUserService = inject(CurrentUserService);
+    private readonly apiService = inject(ApiService);
 
     protected devices$$ = signal<DeviceItem[]>([]);
 
@@ -78,33 +81,26 @@ export class LandingPageViewComponent implements OnInit {
     }
 
     private fetchAvailableDevices(): void {
-        this.devices$$.set([
-            {
-                name: 'iPhone 1',
-                routerLink: '/field-device',
-                type: DeviceType.FIELD,
-            },
-            {
-                name: 'iPhone 2',
-                routerLink: '/field-device',
-                type: DeviceType.FIELD,
-            },
-            {
-                name: 'iPad 1',
-                routerLink: '/field-device',
-                type: DeviceType.FIELD,
-            },
-            {
-                name: 'iPad 2',
-                routerLink: '/field-device',
-                type: DeviceType.FIELD,
-            },
-            {
-                name: 'Command device',
-                routerLink: '/command-device',
-                type: DeviceType.COMMAND,
-            },
-        ]);
+        this.apiService
+            .getAvailableDevices()
+            .pipe(
+                map((devices) =>
+                    devices.map((device) => ({
+                        name:
+                            device.type === DeviceType.FIELD
+                                ? device.name
+                                : 'Command device',
+                        routerLink:
+                            device.type === DeviceType.FIELD
+                                ? 'field-device'
+                                : 'command-device',
+                        type: device.type,
+                    })),
+                ),
+            )
+            .subscribe((devices: DeviceItem[]) => {
+                this.devices$$.set(devices);
+            });
     }
 
     private initForm(): void {

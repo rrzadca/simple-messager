@@ -6,8 +6,8 @@ export enum DeviceType {
 export interface DeviceBase {
     id: string;
     type: DeviceType;
-    joinedAt: Date;
-    username: string;
+    joinedAt?: Date;
+    username?: string;
 }
 
 export interface FieldDevice extends DeviceBase {
