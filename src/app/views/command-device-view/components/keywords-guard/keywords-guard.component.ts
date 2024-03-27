@@ -2,6 +2,8 @@ import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
+    HostBinding,
+    HostListener,
     inject,
     OnInit,
     signal,
@@ -53,8 +55,14 @@ export class KeywordsGuardComponent implements OnInit {
 
     protected keywords$$ = signal<string[]>([]);
     protected keywordList$$ = signal<KeywordRowItem[]>([]);
+
     protected keyword: string | null = null;
     protected tableColumns: TableColumn[] = [];
+
+    @HostListener('keydown.enter')
+    handleEnterKeyup(): void {
+        this.handleAddKeyword();
+    }
 
     ngOnInit(): void {
         this.initTableColumns();
@@ -63,7 +71,10 @@ export class KeywordsGuardComponent implements OnInit {
 
     protected handleAddKeyword(): void {
         if (this.keyword) {
-            this.keywords$$.set([...this.keywords$$(), this.keyword]);
+            const keywords = this.keyword
+                .split(' ')
+                .map((keyword) => keyword.trim());
+            this.keywords$$.set([...this.keywords$$(), ...keywords]);
             this.keyword = null;
         }
     }
