@@ -32,25 +32,25 @@ describe('ButtonComponent', () => {
         component.variant = 'secondary';
         fixture.detectChanges();
 
-        expect(nativeElement.querySelector('button').classList).toContain(
+        expect(nativeElement.querySelector('button')).toHaveClass(
             'bg-tertiary-700',
         );
-        expect(nativeElement.querySelector('button').classList).toContain(
+        expect(nativeElement.querySelector('button')).toHaveClass(
             'dark:bg-tertiary-900',
         );
-        expect(nativeElement.querySelector('button').classList).toContain(
+        expect(nativeElement.querySelector('button')).toHaveClass(
             'text-tertiary-100',
         );
-        expect(nativeElement.querySelector('button').classList).not.toContain(
+        expect(nativeElement.querySelector('button')).not.toHaveClass(
             'bg-primary-700',
         );
-        expect(nativeElement.querySelector('button').classList).not.toContain(
+        expect(nativeElement.querySelector('button')).not.toHaveClass(
             'text-white',
         );
-        expect(nativeElement.querySelector('button').classList).not.toContain(
+        expect(nativeElement.querySelector('button')).not.toHaveClass(
             'dark:bg-primary-700',
         );
-        expect(nativeElement.querySelector('button').classList).not.toContain(
+        expect(nativeElement.querySelector('button')).not.toHaveClass(
             'dark:text-black',
         );
     });
