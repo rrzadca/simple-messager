@@ -6,7 +6,13 @@ import { RouterLink } from '@angular/router';
     standalone: true,
     imports: [RouterLink],
     templateUrl: './device-card.component.html',
-    styleUrl: './device-card.component.scss',
+    styles: [
+        `
+            :host {
+                display: block;
+            }
+        `,
+    ],
 })
 export class DeviceCardComponent {
     protected label$$ = signal<string | null>(null);
