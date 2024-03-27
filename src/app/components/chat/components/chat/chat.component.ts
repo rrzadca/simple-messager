@@ -50,59 +50,32 @@ interface ChatForm {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatComponent implements OnInit {
-    private readonly apiService = inject(ApiService);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly currentUserService = inject(CurrentUserService);
-
     protected messages$$ = signal<ChatMessage[]>([]);
-    protected adminMode$$ = signal<boolean>(false);
+    protected commandMode$$ = signal<boolean>(false);
 
     protected form: FormGroup<ChatForm> | undefined;
 
-    @Input() set adminMode(value: boolean) {
-        this.adminMode$$.set(value);
+    @Input() set commandMode(value: boolean) {
+        this.commandMode$$.set(value);
+    }
+    @Input() set messages(value: ChatMessage[]) {
+        this.messages$$.set(value);
     }
 
     @Output() onSendMessage = new EventEmitter<string>();
 
-    constructor(
-        @Inject(CHAT_MESSAGE_MAPPER_SERVICE)
-        private readonly chatMessageMapperService: ChatMessageMapperService,
-    ) {}
+    constructor() {}
 
     ngOnInit() {
         this.initForm();
-        this.listenForMessages();
     }
 
     protected handleSubmit() {
-        if (
-            this.form?.value.message &&
-            this.currentUserService.state.deviceId
-        ) {
-            this.apiService
-                .sendMessage(
-                    this.currentUserService.state.deviceId,
-                    this.form.value.message,
-                )
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe();
+        if (this.form?.value.message) {
+            this.onSendMessage.emit(this.form.value.message);
 
             this.form.patchValue({ message: '' });
         }
-    }
-
-    private listenForMessages(): void {
-        this.apiService.messageSent$
-            .pipe(
-                map((message) =>
-                    this.chatMessageMapperService.mapToChatMessage(message),
-                ),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe((message) => {
-                this.messages$$.set([...this.messages$$(), message]);
-            });
     }
 
     private initForm(): void {

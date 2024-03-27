@@ -1,6 +1,10 @@
 <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
     <sm-card [headerText]="'System chat'">
-        <sm-chat [adminMode]="true"></sm-chat>
+        <sm-chat
+            [messages]="messages$$()"
+            [commandMode]="true"
+            (onSendMessage)="handleMessageSend($event)"
+        ></sm-chat>
     </sm-card>
 
     <div class="space-y-8 lg:col-span-2">

@@ -4,7 +4,7 @@
     @for (message of messages$$(); track $index) {
         <sm-chat-message
             [message]="message"
-            [adminMode]="adminMode$$()"
+            [adminMode]="commandMode$$()"
         ></sm-chat-message>
     }
 

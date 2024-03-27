@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
+    Inject,
     inject,
     OnInit,
     signal,
@@ -21,6 +22,13 @@ import { ButtonComponent } from '../../components/button/button.component';
 import { KeywordsGuardComponent } from './components/keywords-guard/keywords-guard.component';
 import { ToastrService } from 'ngx-toastr';
 import { CardComponent } from '../../components/card/card.component';
+import { CurrentUserService } from '../../services/current-user.service';
+import { map } from 'rxjs';
+import {
+    CHAT_MESSAGE_MAPPER_SERVICE,
+    ChatMessageMapperService,
+} from '../../components/chat/services/chat-message-mapper.service';
+import { ChatMessage } from '../../components/chat/models/chat-message.model';
 
 interface DeviceRowItem {
     id: string;
@@ -61,22 +69,34 @@ export class CommandDeviceViewComponent implements OnInit {
     private readonly deviceTypePipe = inject(DeviceTypePipe);
     private readonly datePipe = inject(DatePipe);
     private readonly toastrService = inject(ToastrService);
+    private readonly currentUserService = inject(CurrentUserService);
 
     protected devices$$ = signal<DeviceRowItem[]>([]);
+    protected messages$$ = signal<ChatMessage[]>([]);
 
     protected tableColumns: TableColumn[] = [];
     protected tableRowOptions: TableRowOption[] = [];
+
+    constructor(
+        @Inject(CHAT_MESSAGE_MAPPER_SERVICE)
+        private readonly chatMessageMapperService: ChatMessageMapperService,
+    ) {}
 
     ngOnInit() {
         this.initTableColumns();
         this.initTableRowOptions();
 
-        this.devices$$.set(
-            this.apiService.state.devices.map((device) =>
-                this.mapToDeviceRowItem(device),
-            ),
-        );
+        this.fetchDevices();
         this.listenForDevicesChange();
+        this.listenForMessages();
+    }
+
+    protected handleMessageSend(message: string) {
+        if (this.currentUserService.state.deviceId)
+            this.apiService
+                .sendMessage(this.currentUserService.state.deviceId, message)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe();
     }
 
     private listenForDevicesChange(): void {
@@ -122,6 +142,14 @@ export class CommandDeviceViewComponent implements OnInit {
         ];
     }
 
+    private fetchDevices(): void {
+        this.devices$$.set(
+            this.apiService.state.devices.map((device) =>
+                this.mapToDeviceRowItem(device),
+            ),
+        );
+    }
+
     private mapToDeviceRowItem(device: Device): DeviceRowItem {
         return {
             id: device.id,
@@ -152,6 +180,19 @@ export class CommandDeviceViewComponent implements OnInit {
                     undefined,
                     { timeOut: 4000, enableHtml: true },
                 );
+            });
+    }
+
+    private listenForMessages(): void {
+        this.apiService.messageSent$
+            .pipe(
+                map((message) =>
+                    this.chatMessageMapperService.mapToChatMessage(message),
+                ),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe((message) => {
+                this.messages$$.set([...this.messages$$(), message]);
             });
     }
 }
