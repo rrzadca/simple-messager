@@ -1,0 +1,24 @@
+<div class="flex flex-row items-center justify-between p-4 md:px-8">
+    <h3>Communication System Simulator</h3>
+    <div class="flex flex-row items-center gap-x-4">
+        @if (currentUsername$$()) {
+            <span>Hi {{ currentUsername$$() }}!</span>
+
+            <sm-button
+                [variant]="'secondary'"
+                class="self-end"
+                (click)="handleLogout()"
+            >
+                Log out
+            </sm-button>
+        }
+
+        <sm-button
+            [variant]="'secondary'"
+            class="self-end"
+            (click)="toggleTheme()"
+        >
+            {{ themeButtonLabel$$() }}
+        </sm-button>
+    </div>
+</div>

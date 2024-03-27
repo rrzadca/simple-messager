@@ -1,0 +1,20 @@
+<div class="flex flex-row gap-x-4 pt-4">
+    @for (keyword of keywords$$(); track $index) {
+        <sm-badge [text]="keyword" [variant]="'error'"></sm-badge>
+    }
+</div>
+<div class="flex flex-row items-end gap-x-4">
+    <sm-input-text
+        [placeholder]="'Keyword'"
+        [(ngModel)]="keyword"
+        class="w-full"
+    ></sm-input-text>
+    <sm-button (click)="handleAddKeyword()"> Add </sm-button>
+</div>
+@if (keywordList$$().length) {
+    <sm-table
+        [data]="keywordList$$()"
+        [tableColumns]="tableColumns"
+        class="mt-4"
+    ></sm-table>
+}

@@ -1,0 +1,25 @@
+<tr class="group relative hover:bg-tertiary-200 dark:hover:bg-tertiary-800">
+    @for (column of tableColumns; track $index) {
+        <td
+            class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium sm:w-auto sm:max-w-none"
+        >
+            {{ data[column.fieldName] }}
+        </td>
+    }
+    <div
+        class="absolute right-0 top-2 hidden gap-x-2 pl-4 pr-2 transition-all duration-300 ease-in-out group-hover:block"
+    >
+        <div class="flex flex-row gap-x-4">
+            @for (option of rowOptions; track $index) {
+                @if (isOptionVisible(option, data)) {
+                    <sm-button
+                        [variant]="'primary'"
+                        (click)="option.action(data)"
+                    >
+                        {{ option.label }}
+                    </sm-button>
+                }
+            }
+        </div>
+    </div>
+</tr>

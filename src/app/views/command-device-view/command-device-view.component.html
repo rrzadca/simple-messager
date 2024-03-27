@@ -1,0 +1,24 @@
+<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+    <sm-card [headerText]="'System chat'">
+        <sm-chat
+            [messages]="messages$$()"
+            [commandMode]="true"
+            (onSendMessage)="handleMessageSend($event)"
+        ></sm-chat>
+    </sm-card>
+
+    <div class="space-y-8 pr-2 lg:col-span-2">
+        <sm-card [headerText]="'Online devices'">
+            <sm-table
+                [data]="devices$$()"
+                [tableColumns]="tableColumns"
+                [rowOptions]="tableRowOptions"
+                class="mt-4"
+            ></sm-table>
+        </sm-card>
+
+        <sm-card [headerText]="'Keywords'">
+            <sm-keywords-guard></sm-keywords-guard>
+        </sm-card>
+    </div>
+</div>

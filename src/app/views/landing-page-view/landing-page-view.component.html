@@ -1,0 +1,26 @@
+<h3 class="text-center">Welcome to</h3>
+<h1 class="mt-4 text-center">Communication System Simulator</h1>
+<h3 class="mt-12 text-center font-normal">
+    Enter your username and choose a device
+</h3>
+
+@if (form) {
+    <form [formGroup]="form" class="">
+        <sm-input-text
+            [formControlName]="'username'"
+            [placeholder]="'Username'"
+            class="mx-auto max-w-lg"
+        ></sm-input-text>
+    </form>
+}
+
+<div
+    class="mt-12 flex flex-col justify-center gap-y-4 md:flex-row md:flex-wrap md:gap-x-8"
+>
+    @for (device of devices$$(); track $index) {
+        <sm-device-card
+            [label]="device.name"
+            (click)="handleSubmit(device)"
+        ></sm-device-card>
+    }
+</div>
